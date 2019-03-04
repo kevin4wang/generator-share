@@ -1,0 +1,106 @@
+package $!{doMain.servicePackageName}.impl;
+
+import $!{doMain.packageName}.$!{doMain.className};
+import $!{doMain.servicePackageName}.$!{doMain.className}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import cn.com.bmsoft.common.dao.SimpleSqlSessionTemplate;
+import java.util.List;
+import cn.com.bmsoft.common.page.PageDto;
+import cn.com.bmsoft.common.dto.DeleteInDto;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
+import java.util.ArrayList;
+import $!{doMain.inBeanPackageName}.$!{doMain.className}InDTO;
+import $!{doMain.outBeanPackageName}.$!{doMain.className}OutDTO;
+import org.springframework.util.CollectionUtils;
+
+/**
+ * $!{doMain.classNote}
+ * @author $!{doMain.author}
+ * @date $!{doMain.date}
+ */
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class $!{doMain.className}ServiceImpl implements $!{doMain.className}Service {
+
+    @Autowired
+    private SimpleSqlSessionTemplate simpleSqlSessionTemplate;
+
+    @Override
+    @Transactional
+    public Long save($!{doMain.className}InDTO $!{doMain.nickName}InDTO) throws Exception {
+        $!{doMain.className} $!{doMain.nickName} = new $!{doMain.className}();
+        $!{doMain.nickName} = $!{doMain.nickName}.to$!{doMain.className}($!{doMain.nickName}InDTO);
+        $!{doMain.nickName}.setDelFlag((short)0);
+        simpleSqlSessionTemplate.save("$!{doMain.className}Mapper.insert", $!{doMain.nickName});
+        return $!{doMain.nickName}.getId();
+    }
+
+    @Override
+    public PageDto<$!{doMain.className}OutDTO> get${doMain.className}List($!{doMain.className}InDTO $!{doMain.nickName}InDTO) throws Exception{
+        PageDto<$!{doMain.className}OutDTO> pageDto = new PageDto<$!{doMain.className}OutDTO>();
+        List<$!{doMain.className}OutDTO> resultList = new ArrayList<$!{doMain.className}OutDTO>();
+        PageHelper.startPage($!{doMain.nickName}InDTO.getPageNum(), $!{doMain.nickName}InDTO.getPageSize(), "id desc");
+        List<$!{doMain.className}> list = (List<$!{doMain.className}>) simpleSqlSessionTemplate.findForList("$!{doMain.className}Mapper.get$!{doMain.className}List", $!{doMain.nickName}InDTO);
+        if(!CollectionUtils.isEmpty(list)){
+          for ($!{doMain.className} $!{doMain.nickName} : list) {
+            $!{doMain.className}OutDTO outDTO = new $!{doMain.className}OutDTO();
+            BeanUtils.copyProperties($!{doMain.nickName}, outDTO);
+            resultList.add(outDTO);
+          }
+        }
+        PageInfo<$!{doMain.className}> page = new PageInfo<$!{doMain.className}>(list);
+        pageDto.setPageNum(page.getPageNum());
+        pageDto.setPageSize(page.getPageSize());
+        pageDto.setPages(page.getPages());
+        pageDto.setTotal(page.getTotal());
+        pageDto.setPageList(resultList);
+        return pageDto;
+    }
+
+    @Override
+    public Long update($!{doMain.className}InDTO $!{doMain.nickName}InDTO)  throws Exception{
+        $!{doMain.className} $!{doMain.nickName} = new $!{doMain.className}();
+        $!{doMain.nickName} = $!{doMain.nickName}.to$!{doMain.className}($!{doMain.nickName}InDTO);
+        simpleSqlSessionTemplate.update("$!{doMain.className}Mapper.update", $!{doMain.nickName});
+        return $!{doMain.nickName}.getId();
+    }
+
+    @Override
+    public ${doMain.className}OutDTO selectById(${doMain.idJavaType} id) throws Exception{
+        $!{doMain.className}  $!{doMain.nickName} =($!{doMain.className})simpleSqlSessionTemplate.findForObject("$!{doMain.className}Mapper.selectById", id);
+        ${doMain.className}OutDTO ${doMain.nickName}OutDTO=null;
+        if($!{doMain.nickName}!=null){
+            $!{doMain.nickName}OutDTO = new ${doMain.className}OutDTO();
+            BeanUtils.copyProperties($!{doMain.nickName}, ${doMain.nickName}OutDTO);
+        }
+
+        return  ${doMain.nickName}OutDTO;
+    }
+
+    @Override
+    public int delete(DeleteInDto ids) throws Exception{
+    	int count = 0;
+    	if (ids != null && ids.getIds() != null) {
+	        for (Long id : ids.getIds()) {
+	           int resultNum = (int)simpleSqlSessionTemplate.update("$!{doMain.className}Mapper.delete", id);
+	           if(resultNum == 1){
+	              count++;
+	           }
+	        }
+	    }
+        return count;
+    }
+
+
+
+
+
+
+}

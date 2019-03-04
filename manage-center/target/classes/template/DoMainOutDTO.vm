@@ -1,0 +1,24 @@
+package $!{doMain.outBeanPackageName};
+
+
+import java.util.Date;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * $!{doMain.classNote} 出参实体
+ *
+ * @author $!{doMain.author}
+ * @date $!{doMain.date}
+ */
+@ApiModel(value = "$!{doMain.className}OutDTO", description = "$!{doMain.classNote}")
+@Data
+public class $!{doMain.className}OutDTO  {
+
+#foreach( $elem in $doMain.doMainProperties)
+    @ApiModelProperty(value = "$!{elem.columnNote}")
+    private $elem.javaType $elem.propertyName;
+#end
+
+}

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: register-center
+Implementation-Version: 1.5.12.RELEASE
+Built-By: Administrator
+Implementation-Vendor-Id: com.bmsoft
+Build-Jdk: 1.8.0_31
+Implementation-URL: http://projects.spring.io/spring-boot/register-cen
+ ter/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

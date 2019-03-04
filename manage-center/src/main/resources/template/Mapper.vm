@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="$!{doMain.className}Mapper">
+
+    <resultMap id="BaseResultMap" type="$!{doMain.packageName}.$!{doMain.className}">
+    #foreach( $elem in $doMain.doMainProperties)
+    <result column="$elem.columnName" property="$elem.propertyName" jdbcType="$elem.jdbcType"/>
+    #end
+</resultMap>
+
+    <sql id="Base_Column_List">#foreach( $elem in $doMain.doMainProperties)
+#if($velocityCount != $!{doMain.doMainProperties.size()})
+#if(($velocityCount - 1)%5!=0)
+${elem.columnName},#else
+
+        ${elem.columnName},#end
+#else
+$elem.columnName
+#end
+#end
+    </sql>
+
+    <sql id="Base_Column_Where_List">
+        <where>
+        #foreach( $elem in $doMain.doMainProperties)
+#if(${elem.javaType}=='String')
+    <if test="${elem.propertyName} != null and ${elem.propertyName} != '' ">
+#else
+    <if test="${elem.propertyName} != null">
+#end
+                AND ${elem.columnName} = #{${elem.propertyName},jdbcType=${elem.jdbcType}}
+            </if>
+        #end
+</where>
+    </sql>
+
+    <sql id="selectSql">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM $!{doMain.tableName}
+        <include refid="Base_Column_Where_List"/>
+        and del_flag =0
+    </sql>
+
+    <insert id="insert" parameterType="$!{doMain.packageName}.$!{doMain.className}" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO $!{doMain.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #foreach( $elem in $doMain.doMainProperties)
+                ${elem.columnName},
+            #end
+
+</trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+        #foreach( $elem in $doMain.doMainProperties)
+                #{${elem.propertyName},jdbcType=${elem.jdbcType}},
+        #end
+    </trim>
+    </insert>
+
+    <update id="update" parameterType="$!{doMain.packageName}.$!{doMain.className}">
+        UPDATE $!{doMain.tableName}
+        <set>
+        #foreach( $elem in $doMain.doMainProperties)
+#if(!(${elem.propertyName}=='id'||${elem.propertyName}=='createTime'))
+#if(${elem.propertyName}=='updateTime')
+    ${elem.columnName} =
+            <include refid="page.getCurrentTime"/>
+#else
+#if(${elem.javaType}=='String')
+    <if test="${elem.propertyName} != null and ${elem.propertyName} != '' ">
+#else
+    <if test="${elem.propertyName} != null">
+#end
+                ${elem.columnName} = #{${elem.propertyName},jdbcType=${elem.jdbcType}},
+            </if>
+#end
+        #end
+#end
+</set>
+        <where>
+          <if test="id != null">
+             id = #{id,jdbcType=BIGINT}
+          </if>
+        </where>
+    </update>
+
+    <select id="get$!{doMain.className}List" parameterType="$!{doMain.inBeanPackageName}.$!{doMain.className}InDTO" resultMap="BaseResultMap">
+        <include refid="selectSql"/>
+    </select>
+
+  <select id="selectById"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM $!{doMain.tableName} where id = #{id,jdbcType=BIGINT} and del_flag=0
+  </select>
+
+  <update id="delete"  parameterType="java.lang.Long">
+    update $!{doMain.tableName} set del_flag=1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+
+
+</mapper>

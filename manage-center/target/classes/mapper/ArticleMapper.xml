@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ArticleMapper">
+	<!-- 新增-->
+    <insert id="insertArticle" parameterType="java.util.Map">
+    insert into article(id,arttype,articlename,publicdate,htmlpath,logopath)
+	value(#{id},#{arttype},#{articlename},sysdate,#{htmlpath},#{logopath})
+    </insert>
+    <!-- 修改 -->
+	<update id="editArticle" parameterType="PageData">
+		update  article
+			set 
+			    arttype = #{arttype},
+				articlename = #{articlename},
+				publicdate = now(),
+				htmlpath = #{htmlpath},
+				logopath= #{logopath}
+			where 
+				id = #{id}
+	</update>
+		<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="Integer" resultType="PageData">
+		select * from article
+		where id = #{PageData.id}
+	</select>
+	<!-- 列表 -->
+	<select id="articlelistPage" parameterType="Page" resultType="PageData">
+		select *
+		from article
+		where 1 = 1
+		<if test="PageData.articlename != null and PageData.articlename != ''"><!-- 文章名称检索 -->
+			and articlename like CONCAT(CONCAT('%', #{PageData.articlename}),'%') 
+		</if>
+		<if test="PageData.arttype != null and PageData.arttype != '' and PageData.arttype != 'all' "><!-- 文章类型检索 -->
+			and	 articlename like CONCAT(CONCAT('%', #{PageData.articlename}),'%') 
+		</if>
+		order by id desc
+	</select>
+	<!-- 删除-->
+	<delete id="deleteArticle" parameterType="Integer">
+		delete from article
+		where  id = #{id}
+	</delete>
+	<select id="findByfunction" parameterType="PageData" resultType="PageData">
+		select *,LENGTH(articlename) from article where articlename like CONCAT(CONCAT('%', #{articlename}),'%') 
+	</select>
+</mapper>

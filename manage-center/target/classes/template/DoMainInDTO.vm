@@ -1,0 +1,25 @@
+package $!{doMain.inBeanPackageName};
+
+
+import java.util.Date;
+import lombok.Data;
+
+/**
+ * $!{doMain.classNote} 入参实体
+ *
+ * @author $!{doMain.author}
+ * @date $!{doMain.date}
+ */
+@Data
+public class $!{doMain.className}InDTO  {
+
+#foreach( $elem in $doMain.doMainProperties)
+    //$!{elem.columnNote}
+    private $elem.javaType $elem.propertyName;
+#end
+    // 页数
+    private int pageNum;
+
+    // 每页条数
+    private int pageSize;
+}

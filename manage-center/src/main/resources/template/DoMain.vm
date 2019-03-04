@@ -1,0 +1,27 @@
+package $!{doMain.packageName};
+
+import java.util.Date;
+import lombok.Data;
+import ma.glasnost.orika.impl.ConfigurableMapper;
+import $!{doMain.inBeanPackageName}.$!{doMain.className}InDTO;
+
+/**
+ * $!{doMain.classNote}
+ *
+ * @author $!{doMain.author}
+ * @date $!{doMain.date}
+ */
+@Data
+public class $!{doMain.className}  {
+
+#foreach( $elem in $doMain.doMainProperties)
+    //$!{elem.columnNote}
+    private $elem.javaType $elem.propertyName;
+#end
+    public $!{doMain.className} to$!{doMain.className} ($!{doMain.className}InDTO dto) {
+        ConfigurableMapper mapper = new ConfigurableMapper();
+        $!{doMain.className} $!{doMain.nickName} = new $!{doMain.className}();
+        $!{doMain.nickName} = mapper.map(dto, $!{doMain.className}.class);
+        return $!{doMain.nickName};
+    }
+}

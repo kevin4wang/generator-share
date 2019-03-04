@@ -1,0 +1,53 @@
+package $!{doMain.servicePackageName};
+
+import $!{doMain.packageName}.$!{doMain.className};
+import java.util.List;
+import cn.com.bmsoft.common.page.PageDto;
+import cn.com.bmsoft.common.dto.DeleteInDto;
+import $!{doMain.inBeanPackageName}.$!{doMain.className}InDTO;
+import $!{doMain.outBeanPackageName}.$!{doMain.className}OutDTO;
+
+/**
+ * $!{doMain.classNote}
+ *
+ * @author $!{doMain.author}
+ * @date $!{doMain.date}
+ */
+public interface $!{doMain.className}Service {
+
+    /**
+     * 插入
+     * @param $!{doMain.nickName}InDTO
+     * @return Long
+     */
+    Long save($!{doMain.className}InDTO $!{doMain.nickName}InDTO) throws Exception;
+
+    /**
+     * 查询列表(分页)
+     * @param $!{doMain.nickName}InDTO $!{doMain.nickName}InDTO
+     * @return PageDto
+     */
+    PageDto<$!{doMain.className}OutDTO> get${doMain.className}List($!{doMain.className}InDTO $!{doMain.nickName}InDTO) throws Exception;
+
+    /**
+     * 主键更新
+     * @param $!{doMain.nickName}InDTO $!{doMain.nickName}InDTO
+     * @return Long
+     */
+    Long update($!{doMain.className}InDTO $!{doMain.nickName}InDTO) throws Exception;
+
+    /**
+     * 主键查询
+     * @param  id id
+     * @return $!{doMain.className}
+     */
+    $!{doMain.className}OutDTO selectById(${doMain.idJavaType} id) throws Exception;
+
+    /**
+     * 删除记录
+     * @param  ids id集合
+     * @return Integer 删除记录数
+     */
+    int delete(DeleteInDto ids) throws Exception;
+
+}
